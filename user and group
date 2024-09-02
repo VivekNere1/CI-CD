@@ -1,0 +1,31 @@
+USER COMMANDS:
+
+1. To list out all the users in Linux,   cut -d: -f1 /etc/passwd
+2. id username
+3. sudo useradd username
+4. passwd username
+5. Accessing a user configuration file.  
+cat /etc/passwd
+This commands prints the data of the configuration file. This file contains information about the user in the format.  
+username : x : user id : user group id : : /home/username : /bin/ba
+6. The command to change the user ID for a user:: usermod  -u new_id username
+7. Command to Modify the group ID of a user :: usermod -g  new_group_id username
+8. You can change the user login name:: sudo usermod -l new_login_name old_login_name
+9. The command to change the home directory.:: 
+eval echo ~test // /home/test
+sudo usermod -d new_home_directory test
+eval echo ~test // new_home_directory
+10. userdel -r username
+---------------------------------------------------------------------------------------------------------------------
+GROUP COMMANDS: 
+
+1. to display all group ::  tail -3 /etc/group  OR cat /etc/gshadow
+2.groupadd group_name
+3.to set password: gpasswd group_name
+4.Adding a User to an Existing Group :: usermod -G group_name  username
+5.Command to Add User to Group Without Removing from Existing Groups:: usermod -aG group1 John_Doe
+6. Command to Add Multiple Users to a Group at once:: gpasswd -M Person1, Person2, Person3 Group1
+7. Deleting a User from a Group:: gpasswd -d Person1  Group1
+8.Command to Delete a Group :: groupdel  Group1
+
+-------------------------------------------------------------------------------------------------------------------
