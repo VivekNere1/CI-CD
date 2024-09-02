@@ -1,0 +1,98 @@
+1)hostname
+2)whoami
+3)to check ip
+ip addr  note:(inside the enp0s3 inside inet we have our system ip.. inet is internet protocol family)
+
+4)pwd => print working directory
+
+5)ls =>list directory 
+
+6)to create folder
+mkdir folder_name
+
+7)cd => change directory
+cd .. => this will move back one step at a time
+cd    => directly move to home
+
+8)to clear screen use 'clear'
+
+
+9)to find some folder inside another folder
+'find mainfolder/ -name findingfolder'
+ 
+
+10)to search file starts with some specific name:
+'ls that_word*'
+
+11)to create file:
+'touch filename'
+
+12)to delete folder:
+rmdir foldername/  OR  rm -r media/  OR rm filename
+
+13)'ls -l'  gives complete info 
+'ls --help' OR 'man ls'
+
+'ls -lt'  =>show latest to oldest modified folder
+'ls -ltr' =>show oldest to latest modified folder
+
+14)To write in a file:
+'vi file_name'
+press i
+escape
+shift+: wq!  
+
+15)to read file:
+cat file_name
+OR less file
+
+16)To find out word count we use
+wc file_name  (lines word bytes file_name)
+
+17)To check difference between two files 
+diff file1 file2
+
+
+18)To compress the multiple files:
+'tar cvf files.tar file1 file2 ....'
+then it will create one files.tar file 
+to compress this tar file we use below command 
+'gzip files.tar'
+above command create files.tar.gz file
+
+
+19)to copy paste file from one folder to another:
+'cp files.tar.gz  source_folder/'
+
+20)to unzip file
+'gunzip files.tar.gz'
+
+21)to untar file
+'tar xvf files.tar'
+
+22)To rename file:
+'mv oldfilename newnameforthatfile'
+
+23)To combining files using cat:
+'cat file1 file2 > file3'  file3 is created newly and have content of both file1 and file2
+
+24)split lines of file:
+'split -l no_of_lines file_name'
+
+shift+g =>to go at the end
+shift+p =>to go at the start
+
+
+25)to show the word which is present in the file 
+'cat filename | grep word_name'
+to ignore the case sensitivity of word_name use 
+'cat filename | grep -i word_name'
+
+26)'head no_of_lines filename'
+'tail -(no_of_lines) filename'
+
+
+27)To sorting file
+'sort file_name'
+to remove duplicates 
+'sort file_name | uniq'
