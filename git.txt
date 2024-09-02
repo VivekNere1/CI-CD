@@ -1,0 +1,115 @@
+ssh protocol used by git to push the code (ssh=>secure shell) it is worked on port number 22
+sc -> secure copy
+using ssh we can connect machines remotely
+ssh works on key based authentication.
+
+
+
+create 3 instace with same key
+sudo su -
+hostnamectl set-hostname server.example.com
+bash
+yum install git
+
+
+
+mkdir /dev-one
+cd /dev-one/
+ls -a    => to show hidden files 
+git init --bare =>to create for git server //creates central repo.
+git init    =>to create client side // creates local repo.
+ls -a
+
+
+
+
+ssh-keygen
+
+#in main server machine:
+vim /etc/ssh/sshd_config  => for ssh related changes 
+makes:
+line no.40 PermitRootLogin yes
+line no,65 PasswordAuthentication yes
+permitEmptyPassword no
+
+systemctl restart sshd
+systemctl enable sshd
+
+
+
+#in client machine
+ssh-copy-id root@ip_of_server_machine
+
+
+
+
+ssh-keygen
+cd .ssh/
+ll
+ssh-copy-id root@172.
+===============================================
+mkdir /project-x
+ll -d /project-x/
+cd /project-x/
+git init --bare
+cd
+ip a s
+ls -a
+cd .ssh/
+ll
+cd
+vim /etc/ssh/sshd_config
+(vim /etc/ssh/sshd_config  => for ssh related changes 
+makes:
+line no.40 PermitRootLogin yes
+line no,65 PasswordAuthentication yes
+permitEmptyPassword no
+
+)
+systemctl restart sshd
+systemctl enable sshd
+ip a s
+passwd root
+cd .ssh/
+ll
+cat authorized_keys a
+cat authorized_keys
+
+
+
+===================================================================
+mkdir /dev-one
+cd /dev-one/
+git init
+vim index.html
+ll
+git status
+git add index.html
+git status
+git commit -m "first-messgae" index.html
+git log
+git status
+cd
+ls -a
+cd .ssh/
+ll
+cat authorized_keys
+cd
+ping server_ip
+ssh-keygen
+ls -a
+cd .ssh/
+ll
+cd
+ssh-copy-id root@172.31.7.68
+hostname
+
+
+cd /usr/lib/jvm/java-17-openjdk
+
+
+101989036178
+
+
+git branch
+git check
