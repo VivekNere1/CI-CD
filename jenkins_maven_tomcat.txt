@@ -16,34 +16,20 @@ http://your_amazon_linux_instance_ip:8080
 
 
 #Installation and configuration of maven
-1)ct /opt
+1)ct /opt then 'yum install maven -y'
 2)wget https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz
 3)ls
 4)tar -xzvf apache-maven-3.9
 5)mv apache-maven-3.9.9 maven
-
 6)cd /maven then cd /bin
 7)./mvn -v
-8)cd ..
-9)cd ~
-10)pwd
-11)ll -a
-12)vim .bash-profile
-(below the fi
-M2_HOME =/opt/maven
-M2=/opt/maven/bin
-JAVA_HOME=cd /usr/lib/jvm/jre-17-openjdk
-then save all changes
-)
-13)echo $PATH
-14)source .bash-profile
-15)echo $PATH
+
 
 #Install maven plugins and configure Jenkins for maven
 in Jenkins -> manage Jenkins -> plugins -> available plugins -> install maven integration
 now we need to configure this plugins for that go to manage Jenkins
 tools-> add JDK -> name=java11  JAVA_HOME=/usr/lib/jvm/jre-17-openjdk
-then add maven ==> name=maven , MAVEN_HOME= /opt/maven
+then add maven ==> name=maven , MAVEN_HOME= /usr/share/maven
 
 now manage Jenkins -> plugins -> Intsalled plugins -> Disable the GITHUB branch source plugins & enable GitHub plugin and restart
 install git in Jenkins server if not installed already
@@ -59,10 +45,9 @@ In Dev-server
 
 
 =============================================================================================
-#Tomcat Installation
+#Tomcat Installation in tomcat server:
 1)dnf install java-17-amazon-corretto -y
 2)java --version
-3) from https://tomcat.apache.org/download-90.cgi this link cpoy core tar.gz file
 4)pwd   should need to be root
 5) cd /opt
 6)wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.93/bin/apache-tomcat-9.0.93.tar.gz
@@ -114,6 +99,7 @@ add the following info in tomcat-users.xml at the end
 
 
 now we need to reboot the tomcat server
+cd ..
 cd bin/
 ./shutdown.sh
 ./startup.sh
