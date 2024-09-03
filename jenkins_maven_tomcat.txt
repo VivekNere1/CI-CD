@@ -32,7 +32,7 @@ http://your_amazon_linux_instance_ip:8080
 (below the fi
 M2_HOME =/opt/maven
 M2=/opt/maven/bin
-JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+JAVA_HOME=cd /usr/lib/jvm/jre-17-openjdk
 then save all changes
 )
 13)echo $PATH
@@ -42,7 +42,7 @@ then save all changes
 #Install maven plugins and configure Jenkins for maven
 in Jenkins -> manage Jenkins -> plugins -> available plugins -> install maven integration
 now we need to configure this plugins for that go to manage Jenkins
-tools-> add JDK -> name=java11  JAVA_HOME=/usr/lib/jvm/java/usr/lib/jvm/java-17-openjdk
+tools-> add JDK -> name=java11  JAVA_HOME=/usr/lib/jvm/jre-17-openjdk
 then add maven ==> name=maven , MAVEN_HOME= /opt/maven
 
 now manage Jenkins -> plugins -> Intsalled plugins -> Disable the GITHUB branch source plugins & enable GitHub plugin and restart
