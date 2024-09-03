@@ -21,7 +21,8 @@ http://your_amazon_linux_instance_ip:8080
 3)ls
 4)tar -xzvf apache-maven-3.9
 5)mv apache-maven-3.9.9 maven
-6)cd /bin
+
+6)cd /maven then cd /bin
 7)./mvn -v
 8)cd ..
 9)cd ~
