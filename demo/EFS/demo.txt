@@ -1,1 +1,75 @@
+(1)1EFS from same region:
 
+1. Create three instance
+Linux->in zone 1b / Redhat-> in zone 1a / Ubuntu -> in zone 1a
+All have same key-pair and sg(nfs 2049 0.0.0/0, htp,custom tcp,ssh).
+
+2. Linux:
+sudo su –
+cat /etc/os-release
+rpmquery nfs-utils.
+
+3. Redhat:
+sudo su –
+cat /etc/os-release
+yum install nfs-utils -y
+rpmquery nfs-utils.
+
+4. ubuntu:
+sudo su –
+cat /etc/os-release
+apt update
+apt install nfs-common
+rpmquery nfs-utils.
+
+AWS:
+Search ->efs ->create efs - > give name as(EFS-VOL-MUM) -> create.
+Select efs-> click on file system id -> go to networks -> manage -> add security group 
+which has assigned to all instance -> save.
+Select that efs -> view details -> attach -> Mount via ip -> select zone according to 
+instance zone -> copy the nfs client url
+
+In linux terminal:
+mkdir /nfs-data
+(nfs client url and remove last efs from that url) /nfs-data/
+e.g(sudo mount -t nfs4 -o 
+nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 
+172.31.41.3:/ / /efs-data-mumbai/)
+cd /nfs-data
+touch Vivek.txt{1..100}
+df -h
+
+in redhat terminal:
+mkdir /nfs-data-redhat
+url / nfs-data-redhat
+touch redhat.txt{1..10}
+cd / nfs-data-redhat
+
+in ubuntu terminal:
+mkdir /nfs-data-ubuntu
+url / nfs-data-ubuntu
+touch ubuntu.txt{1..10}
+cd / nfs-data- ubuntu
+=============================================================================================================================
+(2)2EFS from another region:
+
+#If someone wants to access efs data(mumbai) to another region(suppose singapore):
+1)Create one efs in singapore
+2)Select that efs-> view details -> replication -> replication to excisting file system -> 
+select region -> brows efs(select efs which is created in singapore)-> create replication 
+(note: disable the protection)
+For replication atleast 20 min required till replication state enables.
+3)create one instance in Singapore(in security group add ssh, all traffic and NFS and 
+name it)
+4)in Singapore efs -> select replicated efs -> view details -> networks -> manage-> add 
+security group which we created while creating Singapore instance-> save.
+5)open Singapore instance in terminal
+sudo su –
+rpmquery nfs-utils
+mkdir /nfs-singapore
+(go to singapore efs->select efs->view details->attach->select availability zone where 
+we created our Singapore instance and copy url)
+(copy url Singapore efs) /nfs-singapore/
+cd /nfs-singapore/
+ll
+df -h
