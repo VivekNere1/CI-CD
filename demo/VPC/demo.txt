@@ -1,1 +1,125 @@
+(1)1 VPC in same region:
+(VISR)->VPC -> IGW -> SUBNET ->ROUTE TABLE
+1)search vpc -> your VPCs ->create vpc
+2)vpc only, Mumbai-vpc, IPv4 CIDR manual input, 10.0.0.0/16 and create VPC and 
+name that vpc as Mumbai-VPC
+3)create internet gateways->name as (Mumbai igw)
+Select that IGW->action->attach to VPC
+4)Go to Subnets (we have to create two subnets one public and one private)
+i)for public subnet
+create subnet-> select our vpc-> subnet name(public-subnet)-> select availability zone 
+1-a and create web-server in that zone only-> 10.0.0.0/16 -> 10.0.0.0/24 -> create 
+subnet.
+ii)for private subnet
+create subnet-> select our vpc-> subnet name(private-subnet)-> select availability zone 
+1-b and create dev-server in that zone only-> 10.0.0.0/16 -> 10.0.1.0/24 -> create 
+subnet.
+5)Now in Mumbai create web-server
+Ec2 -> create instance ->Name(Web-server)-> linux-> t2-micro-> add key-pair -> edit 
+network seeting(add our Mumbai-vpc)-> Subnet(public subnet )-> Auto-assign public 
+IP(Enable)-> create sg with name Mumbai-vpc-sg and add (HTTP anywhere)in inbound 
+rule
+6)Now create route table for an public-server means for web-server
+Go to vpc-> route tables ->create route table -> name(public route table) -
+>VPC(Mumbai-vpc)->create route table.
+Select that public route table->actions->edit route->add route ->
+0.0.0.0/0   internet gateway
+Select that public route table->actions-> Edit subnet associations->select public 
+subnet-> save associations.
+6)open that web-server instance in terminal
+sudo su –
+yum install httpd -y
+cd /var/www/html/
+echo "This is my web-server" > index.html
+cd
+systemctl start httpd
+systemctl enable httpd
+now copy the public ip of webserver instance and paste in chrome and you can see the 
+index.html file means our web-server is running perfectly.
+7)Now we have to create a private server name as DB-server
+Ec2 -> create instance ->Name(db-server)-> linux->t2-micro-> add key-pair -> edit 
+network seeting(add our Mumbai-vpc)-> Subnet(private subnet )-> Auto-assign public 
+IP(Disable)-> attach security group which we have created for web-server-> launch 
+instance.
+For private instance we have to add one more inbound rule in security group 
+Go to sg of DB-server->edit inbound rule->add rule-> Type(ALL ICMP- IPv4) and source 
+(anywhere ipv4) -> save rule
+8)Now we use jump server method to open web-server 
+For that we need to first ping the db-server from web-server
+In web-server terminal-> ping (private ip of db server)
+9)open the key-pair file which we use in both instance.
+Copy all the content from that file.
+In terminal of web-server open that key-pair file like(vim MumbaiGit-server-key.pem)
+And insert all that content and save it.
+chmod 400 MumbaiGit-server-key.pem
+now paste the ssh url of DB-server and now it will jump from web-server to db-server.
+10)Now we need to add NAT gateway to private subnet To give access of the internet.
+VPC->NAT gateways->create NAT gateways->name(MUMBAI-private-NAT-Gateway)->
+Subnet(public subnet)-> allocate elastic ip->create NAT gateway
+11)Now we have to create private route table and specify there about the NAT gateway 
+which we have created right now.
+Go to vpc-> route tables ->create route table -> name(private route table) -
+>VPC(Mumbai-vpc)->create route table.
+Select that private route table->actions->edit route->add route ->
+0.0.0.0/0 NAT gateway
+Select that private route table->actions-> Edit subnet associations->select private 
+subnet-> save associations.
+12)now to check whether our private DB server get a access of internet or not we can 
+install httpd or ping google.com .
+Yum install httpd -y
+ping www.google.com
+if it is then we have successfully established connection between public and private 
+subnet using VPC!
+=============================================================================================================================
+2 VPC in another region:
 
+To give access of Mumbai vpc to Singapore vpc we have to create point to point 
+connection and for that we use the peering device.
+1)create Vpc in Singapore name as Singapore-vpc-Mumbai
+search vpc -> your VPCs ->create vpc 2)vpc only, name(Singapore-vpc-Mumbai), IPv4 
+CIDR manual input, 20.0.0.0/16 and create VPC and name that vpc as Singapore-vpcMumbai.
+Do the same public and private subnet and instance process here in Singapore which 
+we have done in Mumbai.
+2)Now go to Mumbai vpc-> peering connections -> Create peering connection-> 
+name(Mumbai-to-Singapore-peering)-> VPC ID (Requester)(Mumbai-vpc)->my 
+account->another region(singapore)-> copy vpc id of singapore -> create peering 
+connection.
+3)now go to Singapore vpc -> peering connection->select the request->actions-> accept 
+request.
+4)now go to Singapore vpc->route table->select public route table->action->edit route
+10.0.0.0/16  peering connection
+and save changes
+now go to mumbai vpc->route table->select public route table->action->edit route
+20.0.0.0/16 peering connection
+5)now in Singapore public/web-server terminal use below command:
+ssh-keygen
+cd .ssh
+ll
+rm -rf known_hosts
+rm -rf known_hosts.old
+cat id_rsa.pub (copy the ssh key and paste in vim authorized_keys of mumbai public 
+server means in web server)
+6) now in mumbai public/web-server terminal use below command:
+ssh-keygen
+cd .ssh
+ll
+rm -rf known_hosts
+rm -rf known_hosts.old
+cat id_rsa.pub (copy the ssh key and paste in vim authorized_keys of Singapore public 
+server means in web server)
+7)in Singapore terminal
+cd
+cat > singapore.txt
+hello from Singapore
+scp singapore.txt root@10.0.0.publicport:/tmp
+cd /tmp
+ll(you can see mumbai.txt)
+same from mumbai
+cd
+cat >Mumbai.txt
+hello from Mumbai
+scp singapore.txt root@20.0.0.publicport:/tmp
+cd /tmp
+ll(you can see singapore.txt)
+That means we have successfully established peer to peer connection between two 
+regions public server!
