@@ -1,1 +1,20 @@
-
+The basic workflow to move one ec2 instance from one region to another region we have 
+to create snapshot of the region1 instance and create an AMI image of that instance in 
+that region and copy that AMI image in that region2 where we want to move that 
+instance and from that copy image, we can again launch that instance in region2.
+1)Go to the instance of Mumbai and select that instance.
+2)Go to the storage of that instance and click on the volume ID
+3)select that volume then go to the action and select create snapshot option
+4)Then Go to the Elastic Block storage then click on Snapshots then select that 
+snapshot and give name to that snapshot.
+5)Now we need to create an AMI image of that instance from that snapshot so select 
+that snapshot then click on ‘action’then click on ‘create image from snapshot’
+6)Give name and description to that image and create that image
+7)Now click on ‘images’then click on ‘AMI’to see whether image get created or not
+8)Now we want to copy that AMI in Singapore region so, click on that AMI then click on 
+action then click on Copy AMI and then we need to select a region where we want to 
+copy that AMI.
+9)Now switch to the Singapore region and go to the AMI select that AMI and rename it 
+then click on Launch instance from AMI then give name to that instance give key-pair 
+and security group and launch that instance.
+Here we have successfully created Mumbai ec2 instance copy in Singapore
