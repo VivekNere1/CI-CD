@@ -1,1 +1,86 @@
+(1) 1Attach volume to the instance:
+1)Create one instance and Connect that
+2)Go to root user and we can see there is no EBS volume is attach to the instance right 
+now:
+Sudo su –
+lsblk
+3)To attach volume we need to first create it. For that click on volume and then click on 
+create volume then select the volume type here we selecting GP2 and size we select 5 
+gb and select the availability zone where your instance is created.My instance is in apsouth-1b region so im selecting ap-south-1b region and then click on create volume
+4)Now rename this volume for our reference
+5)Now we have to creates a file system on our machine for that we use 
+mkfs.ext4 /dev/xvdb command
+6)Now we have to mount our disk in a specific folder so we need to create one folder
+name as data and Now we want to mount a disk to the data folder.
+mkdir /data
+mount /dev/xvdb /data/
+df -h
+7)Our disk is successfully mount to the data folder now we need to create some sample 
+data file in data folder.
+cd /data
+touch Vivek.txt{1..100}
+ll
+8)Now we have to copy the UUID of xvdb disk in fstab file to store our data permanently
+because if we reboot our machine now it will erase the data but once we save UUID in 
+fstab file then it will never remove data from disk.
+cd
+blkid
+vim /etc/fstab
+UUID= /data ext4 defaults 0 0
+9)Even after system reboot our files are saved
+============================================================================================================================================================================
 
+(2)To resize or increse volume:
+modify volume
+lsblk
+df -h
+resize2fs /dev/xvdb
+df -h
+cd /data
+ll
+============================================================================================================================================================================
+(3) to decrese size of volume
+Create a new volume
+Attach volume
+mkfs.ext4 /dev/xvdc
+mkdir /new-data
+mount /dev/xvdc /new-data/
+cd /data
+mv * /new-data/
+cd
+blkid
+vim /etc/fstab
+UUID= /new-data ext4 defaults 0 0
+systemctl daemon-reload
+unmount /data (if this not work use “umount -l /data” )
+df -h
+lsblk
+aws ->old disk -> detach volume ->delete volume
+============================================================================================================================================================================
+(4) to increse root volume:
+In aws Select the instance root volume from volume and modify it to 10 gb
+lsblk show 10gb
+df -h show 8gb
+growpart /dev/xvda 1
+xfs_growfs -d /dev/xvda1
+============================================================================================================================================================================
+(5)Acces mumbai ebs volume from singapore
+Access Mumbai region ebs volume from Singapore
+Make one ec2 instance in Singapore zone 1-a , launch and open in terminal.
+Mumbai volume-> action-> create snapshot -> description(this is Mumbai snapshot)-> 
+create snapshot.
+Mumbai-> Elastic Block Store ->snapshpts->select snapshot-> actions-> copy 
+snapshot-> select region of Singapore instance.
+Singapore: Elastic Block Store ->snapshpts->select snapshot-> actions->create 
+volume from snapshot->select volume type same as of Mumbai volume type => 
+select availability zone of singapore instance-> create volume.
+Singapore: : Elastic Block Store ->volume ->action-> attach volume-> select 
+instance id.
+Terminal:open signapore instance and connect
+sudo su –
+lsblk
+mkdir /data
+mount /dev/xvdb /data/
+df -h
+cd /data
+ll
