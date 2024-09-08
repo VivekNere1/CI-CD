@@ -11,11 +11,11 @@ sudo su –
 yum install automake fuse fuse-devel gcc-c++ git libcurl-devel libxml2-devel make 
 openssl-devel
 git clone https://github.com/s3fs-fuse/s3fs-fuse.git
-1
-2
-3
-4
-5
+1 cd s3fs-fuse
+2 ./autogen.sh
+3 ./configure --prefix=/usr --with-openssl
+4 make
+5 sudo make install
 cd s3fs-fuse
 ./autogen.sh
 ./configure --prefix=/usr --with-openssl
