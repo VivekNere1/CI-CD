@@ -1,1 +1,57 @@
-
+#To mount s3 bucket with ec2 instance we required 4 things.
+1. Aws ec2 instance for mounting s3 bucket.
+2. S3fs and AWS CLI package for mounting and configuring environment.
+3. Unique s3 bucket with globally access.
+4. Create Aws IAM programmatic user with s3 full access permission.
+Step 1:
+Step2:
+Connect the instance
+sudo su –
+1 yum update all
+yum install automake fuse fuse-devel gcc-c++ git libcurl-devel libxml2-devel make 
+openssl-devel
+git clone https://github.com/s3fs-fuse/s3fs-fuse.git
+1
+2
+3
+4
+5
+cd s3fs-fuse
+./autogen.sh
+./configure --prefix=/usr --with-openssl
+make
+sudo make install
+which s3fs
+step3:
+create bucket
+uncheck Block all public access
+check acknowledge
+create bucket
+step4:
+search IAM
+click on user -> add user->give user name->select aws credential type: access key:
+programmatic access -> next permission-> attach excisting policies directly -> 
+search s3fullaccess->next->next->create (at last we get access key and secret key)
+1. IAM -> 2. Users -> 3. Vivek -> 4. Create access key
+Now we want to mount s3 bucket with ec2 instace permanently:
+mkdir /test ->mount point
+touch /etc/passwd-s3fs
+chmod 600 /etc/passwd-s3fs
+vim /etc/passwd-s3fs (access key:secret key )
+vim /etc/fuse.conf (uncommet user_allow_other)
+for permanent mount we have to update fstab fie
+vim /etc/fstab (s3fs#myfirstbucket30112001 /test fuse _netdev,allow_other 0 0)
+ Bucketname /mountfolder 
+To check mount:
+mount -a
+df -Th /test/
+cd /test/
+ll
+now we can see files from our s3 bucket.
+cp Provisional\ University\ degree.pdf /root/ (to copy the file to root)
+cd
+ll
+we can see file copied in root.
+Cd /test/
+Touch Vivek.txt{1..10}
+You can see in aws s3 interface file created from terminal.
