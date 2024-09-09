@@ -27,6 +27,7 @@ create bucket
 uncheck Block all public access
 check acknowledge
 create bucket
+after createing bucket add one sample file in that.
 step4:
 search IAM
 click on user -> add user->give user name->select aws credential type: access key:
