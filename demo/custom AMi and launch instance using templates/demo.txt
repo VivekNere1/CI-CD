@@ -1,0 +1,14 @@
+create one instace.
+open that instace in terminal
+  sudo su -
+  yum install httpd -y
+  cd /var/www/html
+  echo "hello from mumbai server" > index.html
+  systemctl start httpd
+  systemctl enable httpd
+now copy public ip of mumbai instace and paste in chrome.
+now go to aws:
+select that instance -> action -> image and templates -> create image
+give image name and description -> select that image -> action -> copy image -> in singapore region.
+go to singapore ami -> image -> select that image ->create instace from that image.
+  copy the public ip of that instace and paste on chrome.
