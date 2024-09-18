@@ -1,0 +1,126 @@
+Setup Kubernetes (K8s) Cluster on AWS
+Create Ubuntu EC2 instance
+
+install AWSCLI
+apt install unzip -y
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+
+Install kubectl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+kubectl version --client
+
+INstall kops
+
+curl -Lo kops https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-linux-amd64
+chmod +x ./kops
+sudo mv ./kops /usr/local/bin/
+
+Create an IAM user/role with Route53, EC2, IAM and S3 full access
+
+Attach IAM role to ubuntu server
+
+Note: If you create IAM user with programmatic access then provide Access keys.
+  aws configure
+Install kops on ubuntu instance:
+
+ curl -LO https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-linux-amd64
+ chmod +x kops-linux-amd64
+ sudo mv kops-linux-amd64 /usr/local/bin/kops
+ sudo mv kops-linux-amd64 /usr/local/bin/kops /bin/
+ 
+To check Kops Version
+  kops version 
+
+Create a Route53 private hosted zone (you can create Public hosted zone if you have a domain)
+
+create an S3 bucket
+
+ aws s3 mb s3://dev.k8s.sanjayskv.in
+To Check Bucket: aws s3 ls
+Expose environment variable:
+
+ export KOPS_STATE_STORE=s3://dev.k8s.sanjayskv.in
+Create sshkeys before creating cluster
+
+ ssh-keygen
+Create kubernetes cluster definitions on S3 bucket
+
+ kops create cluster --cloud=aws --zones=ap-southeast-1b --name=dev.k8s.sanjayskv.in --dns-zone=sanjayskv.in --dns private
+Create kubernetes cluser
+
+  kops update cluster dev.k8s.sanjayskv.in --yes --admin
+Validate your cluster
+
+ kops validate cluster
+
+To list nodes
+
+  kubectl get nodes 
+Deploying Nginx container on Kubernetes
+Deploying Nginx Container
+
+  kubectl run sample-nginx --image=nginx --replicas=2 --port=80
+  kubectl get pods
+  kubectl get deployments
+Expose the deployment as service. This will create an ELB in front of those 2 containers and allow us to publicly access them:
+
+ kubectl expose deployment sample-nginx --port=80 --type=LoadBalancer
+ kubectl get services -o wide
+To delete cluster
+
+ kops delete cluster dev.k8s.sanjayskv.in --yes
+  ===================================================
+    1  clear
+    2  curl -Lo kops https://github.com/kubernetes/kops/releases/download/$(curl -s https://api.github.com/repos/kubernetes/kops/releases/latest | grep tag_name | cut -d '"' -f 4)/kops-linux-amd64
+    3  chmod +x kops
+    4  sudo mv kops /usr/local/bin/kops
+    5  kops version
+    6  sudo apt update -y
+    7  clear
+    8  hostnamectl set-hostname Kops-Controller.example.com
+    9  bash
+   10  kops version
+   11  clear
+   12  clear
+   13  aws configure
+   14  apt install unzip -y
+   15  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+   16  unzip awscliv2.zip
+   17  sudo ./aws/install
+   18  curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+   19  sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+   20  kubectl version --client
+   21  aws configure
+   22  aws s3 mb s3://dev.k8s.VivekKNere.in
+   23  aws s3 mb s3://dev.k8s.vivekknere.in
+   24  aws s3 ls
+   25  export KOPS_STATE_STORE=s3://dev.k8s.vivekknere.in
+   26  ssh-keygen
+   27  kops create cluster --cloud=aws --zones=ap-south-1 --name=dev.k8s.vivekknere.in --dns-zone=vivekknere.in --dns private
+   28  kops create cluster --cloud=aws --zones=ap-south-1a --name=dev.k8s.vivekknere.in --dns-zone=vivekknere.in --dns private
+   29  kops update cluster --name dev.k8s.vivekknere.in --yes --admin
+   30  kops validate cluster
+   31  history
+   32  kops validate cluster
+   33  export KOPS_STATE_STORE=s3://dev.k8s.vivekknere.in
+   34  kops validate cluster
+   35  kubectl get pods
+   36  kubectl get nodes
+   37  vim pod.yml
+   38  kubectl create -f pod.yml
+   39  kubectl get pods
+   40  kubectl describe pod first-pod-example
+   41  kubectl get pods
+   42  vim service.yml
+   43  kubectl create -f service.yml
+   44  kubectl get service
+   45  kops get nodes
+   46  kubectl get nodes
+   47  history
+  ===============================
+
+        
